@@ -1,9 +1,15 @@
 package integrations.turnitin.com.membersearcher.service;
 
+// import java.lang.reflect.Member;
+// import java.util.List;
 import java.util.concurrent.CompletableFuture;
+// import java.util.stream.Collectors;
 
 import integrations.turnitin.com.membersearcher.client.MembershipBackendClient;
 import integrations.turnitin.com.membersearcher.model.MembershipList;
+// import integrations.turnitin.com.membersearcher.model.UserList;
+// import integrations.turnitin.com.membersearcher.model.User;
+// import integrations.turnitin.com.membersearcher.model.Membership;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +28,8 @@ public class MembershipService {
 	 * @return A CompletableFuture containing a fully populated MembershipList object.
 	 */
 	public CompletableFuture<MembershipList> fetchAllMembershipsWithUsers() {
+
+		// CompletableFuture<UserList> userList = membershipBackendClient.fetchUsers();
 		return membershipBackendClient.fetchMemberships()
 				.thenCompose(members -> {
 					CompletableFuture<?>[] userCalls = members.getMemberships().stream()
@@ -31,5 +39,31 @@ public class MembershipService {
 					return CompletableFuture.allOf(userCalls)
 							.thenApply(nil -> members);
 				});
+		// return membershipBackendClient.fetchMemberships()
+		// 	.thenCompose(members -> {
+		// 		CompletableFuture<?>[] userCalls = members.getMemberships().stream()
+		// 				.map(member -> findUser(member, userList))
+		// 						.thenApply(member::setUser))
+		// 				.toArray(CompletableFuture<?>[]::new);
+		// 		return CompletableFuture.allOf(userCalls)
+		// 				.thenApply(nil -> members);
+		// 	});
 	}
+	
+	//
+	// Helper method to find the corresponding User for a Membership
+    // private static CompletableFuture<User> findUser(CompletableFuture<Membership> member, List<CompletableFuture<User>> userList) {
+    //     return member.thenCompose(membership -> userList.stream()
+    //             .filter(userFuture -> userFuture.thenApply(User::getId).join().equals(membership.getUserId()))
+    //             .findFirst()
+    //             .orElse(CompletableFuture.completedFuture(null)));
+    // }
+
+	// Helper method to update the Membership with the User information
+    // private static Membership updateMember(Membership membership, User user) {
+    //     if (user != null) {
+    //         membership.setUser(user);
+    //     }
+    //     return membership;
+    // }
 }
