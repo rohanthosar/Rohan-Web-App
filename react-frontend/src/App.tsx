@@ -2,8 +2,9 @@ import React, { ChangeEvent, FC, useState } from 'react';
 import './App.css';
 import { Membership } from './Type';
 import { fetchMembers } from './Api';
-import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import turnitinLogo from './turnitin-logo.png';
+import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
+
 
 const App: FC<any> = () => {
   const [memberships, setMemberships] = useState<Array<Membership>>([]);
@@ -16,7 +17,7 @@ const App: FC<any> = () => {
   }
 
   const updateSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
+    setSearch(event.target.value.toLowerCase());
   }
 
   const loadDetailsModal = (membership: Membership) => {
@@ -66,7 +67,7 @@ const App: FC<any> = () => {
         { activeMembership &&
           (
             <Modal isOpen={!!activeMembership}>
-              <ModalHeader toggle={e => closeDetailsModal}>User Details</ModalHeader>
+              <ModalHeader toggle={closeDetailsModal}>User Details</ModalHeader>
               <ModalBody>
                 <div>
                   <p>Name: {activeMembership.user?.name}</p>

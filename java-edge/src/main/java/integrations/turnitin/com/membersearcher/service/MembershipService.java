@@ -1,15 +1,19 @@
 package integrations.turnitin.com.membersearcher.service;
 
+import java.util.List;
 // import java.lang.reflect.Member;
 // import java.util.List;
 import java.util.concurrent.CompletableFuture;
 // import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
 import integrations.turnitin.com.membersearcher.client.MembershipBackendClient;
+import integrations.turnitin.com.membersearcher.model.Membership;
 import integrations.turnitin.com.membersearcher.model.MembershipList;
 // import integrations.turnitin.com.membersearcher.model.UserList;
 // import integrations.turnitin.com.membersearcher.model.User;
 // import integrations.turnitin.com.membersearcher.model.Membership;
+import integrations.turnitin.com.membersearcher.model.UserList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,17 +32,41 @@ public class MembershipService {
 	 * @return A CompletableFuture containing a fully populated MembershipList object.
 	 */
 	public CompletableFuture<MembershipList> fetchAllMembershipsWithUsers() {
+		CompletableFuture<UserList> userList = membershipBackendClient.fetchUsers();
+		CompletableFuture<MembershipList> membershipList = membershipBackendClient.fetchMemberships();
 
-		// CompletableFuture<UserList> userList = membershipBackendClient.fetchUsers();
-		return membershipBackendClient.fetchMemberships()
-				.thenCompose(members -> {
-					CompletableFuture<?>[] userCalls = members.getMemberships().stream()
-							.map(member -> membershipBackendClient.fetchUser(member.getUserId())
-									.thenApply(member::setUser))
-							.toArray(CompletableFuture<?>[]::new);
-					return CompletableFuture.allOf(userCalls)
-							.thenApply(nil -> members);
-				});
+		return userList.thenCombine(membershipList, (users, memberships) -> {
+			List<Membership> updatedMemberships = memberships.getMemberships().stream()
+					.flatMap(membership -> users.getUsers().stream()
+							.filter(user -> membership.getUserId().equals(user.getId()))
+							.findFirst()
+							.map(user -> {
+								membership.setUser(user);
+								return membership;
+							})
+							.stream()
+					)
+					.collect(Collectors.toList());
+
+			return new MembershipList().setMemberships(updatedMemberships);
+		});
+	}
+
+
+
+	 
+	// public CompletableFuture<MembershipList> fetchAllMembershipsWithUsers() {
+
+	// 	// CompletableFuture<UserList> userList = membershipBackendClient.fetchUsers();
+	// 	return membershipBackendClient.fetchMemberships()
+	// 			.thenCompose(members -> {
+	// 				CompletableFuture<?>[] userCalls = members.getMemberships().stream()
+	// 						.map(member -> membershipBackendClient.fetchUser(member.getUserId())
+	// 								.thenApply(member::setUser))
+	// 						.toArray(CompletableFuture<?>[]::new);
+	// 				return CompletableFuture.allOf(userCalls)
+	// 						.thenApply(nil -> members);
+	// 			});
 		// return membershipBackendClient.fetchMemberships()
 		// 	.thenCompose(members -> {
 		// 		CompletableFuture<?>[] userCalls = members.getMemberships().stream()
@@ -66,4 +94,4 @@ public class MembershipService {
     //     }
     //     return membership;
     // }
-}
+

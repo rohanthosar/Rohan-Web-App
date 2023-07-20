@@ -39,3 +39,28 @@ To run the tests for the java-edge service, you can run the following command fr
 ```bash
 docker-compose -f docker-compose.test.yml up --build
 ```
+
+
+# Changes
+  Task 1
+   1. The method's purpose is "Fetches all memberships with associated users using asynchronous calls."
+   2. It explains how the method works: combining two asynchronous operations (fetching users and       memberships) and associating memberships with their corresponding users based on the user ID.
+   3. The result type is mentioned: "A CompletableFuture that completes with the MembershipList containing memberships and their associated users once the asynchronous fetch operations are complete."
+
+  Task 2
+   1. updateSearch: (event: ChangeEvent<HTMLInputElement>) => A function that is triggered on every change in the search input field. 
+   2. setSearch(event.target.value.toLowerCase()); It updates the search state with the lowercase version of the user's search term, ensuring a case-insensitive search. 
+
+
+  Task 3
+   1. <ModalHeader toggle={closeDetailsModal}>User Details</ModalHeader> - The header of the details modal with a "User Details" title. The closeDetailsModal function is called when the user clicks on the close (x) button to close the modal.
+
+
+# Submission
+
+
+
+
+
+
+
