@@ -55,8 +55,19 @@ docker-compose -f docker-compose.test.yml up --build
   Task 3
    1. <ModalHeader toggle={closeDetailsModal}>User Details</ModalHeader> - The header of the details modal with a "User Details" title. The closeDetailsModal function is called when the user clicks on the close (x) button to close the modal.
 
+  TestFetchAllMemberships()
+   
+  This test verifies that the MembershipService correctly fetches memberships and users asynchronously and associates them.
+  The steps performed by the test are outlined:
+     1. Call the fetchAllMembershipsWithUsers() method of the MembershipService to fetch all memberships with associated users using asynchronous calls.
+     2.  Wait for the CompletableFuture to complete and obtain the MembershipList result.
+     3. Assert that the number of memberships in the result is equal to 2, indicating that two memberships with associated users are fetched.
+     4. Assert that the first membership's associated user is equal to userOne, and the second membership's associated user is equal to userTwo.
+  The @Test annotation indicates that this method is a test case, and the throws Exception clause specifies that the test may throw an exception if there is an error during the test execution.
 
-# Submission
+
+
+
 
 
 

@@ -24,12 +24,17 @@ public class MembershipService {
 	private MembershipBackendClient membershipBackendClient;
 
 	/**
-	 * Method to fetch all memberships with their associated user details included.
-	 * This method calls out to the php-backend service and fetches all memberships,
-	 * it then calls to fetch the user details for each user individually and
-	 * associates them with their corresponding membership.
-	 *
-	 * @return A CompletableFuture containing a fully populated MembershipList object.
+		* Fetches all memberships with associated users using asynchronous calls.
+ 	*
+ 	* This method combines two asynchronous operations: fetching a list of users
+ 	* and fetching a list of memberships from the php-backend service, and then associates each membership with
+ 	* its corresponding user based on the user ID. The result is a CompletableFuture
+ 	* that completes with a MembershipList containing memberships and their associated users.
+	* 
+	* @return A CompletableFuture that completes with the MembershipList containing memberships
+ 	*         and their associated users once the asynchronous fetch operations are complete.
+	*
+	
 	 */
 	public CompletableFuture<MembershipList> fetchAllMembershipsWithUsers() {
 		CompletableFuture<UserList> userList = membershipBackendClient.fetchUsers();

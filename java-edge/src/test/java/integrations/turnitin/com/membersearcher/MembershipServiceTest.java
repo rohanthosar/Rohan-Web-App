@@ -65,6 +65,21 @@ public class MembershipServiceTest {
 		when(membershipBackendClient.fetchMemberships()).thenReturn(CompletableFuture.completedFuture(members));
 	}
 
+	/**
+ * Test case for fetching all memberships with associated users from the MembershipService.
+ * This test verifies that the MembershipService correctly fetches memberships and users
+ * asynchronously and associates them.
+ *
+ * The test performs the following steps:
+ * 1. Calls the fetchAllMembershipsWithUsers() method of the MembershipService to fetch
+ *    all memberships with associated users using asynchronous calls.
+ * 2. Waits for the CompletableFuture to complete and obtain the MembershipList result.
+ * 3. Asserts that the number of memberships in the result is equal to 2, indicating that
+ *    two memberships with associated users are fetched.
+ * 4. Asserts that the first membership's associated user is equal to userOne, and the
+ *    second membership's associated user is equal to userTwo. 
+ */
+
 	@Test
 	public void TestFetchAllMemberships() throws Exception {
 
